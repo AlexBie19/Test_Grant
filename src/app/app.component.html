@@ -59,6 +59,7 @@
     ><span>Leihvertrag</span>
     <span class="legend-dot" style="background: #27ae60"></span
     ><span>Feldtest</span>
+    <span class="legend-dot" style="background: #00acc1"></span><span>Test</span>
     <span class="legend-dot" style="background: #e74c3c"></span
     ><span>Conversion / Repair</span>
     <span class="legend-dot unsched-dot"></span><span>Ungeplant</span>
@@ -147,6 +148,12 @@
       [allowEditing]="false"
     ></dxi-column>
     <dxi-column
+      dataField="actionType"
+      caption="Typ"
+      [width]="95"
+      [allowEditing]="true"
+    ></dxi-column>
+    <dxi-column
       dataField="description"
       caption="Beschreibung"
       [width]="160"
@@ -166,7 +173,7 @@
     >
     <span
       >🖱 <strong>Rechtsklick Kalender</strong> = Von/Bis setzen · Neue Aktion /
-      Feldtest / Leihvertrag</span
+      Feldtest / Test / Leihvertrag</span
     >
   </div>
 </div>
