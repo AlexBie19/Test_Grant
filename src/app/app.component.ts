@@ -7,6 +7,8 @@ import {
   snapToDay,
 } from "./app.service";
 
+const DAY_MS = 24 * 60 * 60 * 1000;
+
 @Component({
   selector: "app-root",
   templateUrl: "./app.component.html",
@@ -96,7 +98,7 @@ export class AppComponent implements OnInit, OnDestroy {
     const dur =
       !task.isUnscheduled && task.start && task.end
         ? task.end.getTime() - task.start.getTime()
-        : 86400000;
+        : DAY_MS;
     task.start = new Date(this.rangeFrom);
     task.end = new Date(this.rangeFrom.getTime() + dur);
     task.isUnscheduled = false;
@@ -121,6 +123,7 @@ export class AppComponent implements OnInit, OnDestroy {
       if (target.closest(".dx-gantt-task")) return;
       if (target.closest(".dx-scrollbar")) return;
       if (target.closest(".dx-resizable-handle")) return;
+      if (!target.closest(".dx-gantt-chart")) return;
       e.preventDefault();
     };
 
@@ -268,7 +271,11 @@ export class AppComponent implements OnInit, OnDestroy {
     allowTypeChange = true
   ): { title: string; description: string; actionType: string } | null {
     const title = window.prompt("Bezeichnung:", defaults.title);
-    if (!title) return null;
+    if (title === null) return null;
+    if (!title.trim()) {
+      alert("Bezeichnung darf nicht leer sein.");
+      return null;
+    }
     const descriptionInput = window.prompt(
       "Beschreibung:",
       defaults.description ?? ""
@@ -322,9 +329,12 @@ export class AppComponent implements OnInit, OnDestroy {
     });
     if (!payload) return;
 
-    const defaultStart = task.isUnscheduled
-      ? ""
-      : snapToDay(new Date(task.start)).toISOString().slice(0, 10);
+    const startSource = new Date(task.start);
+    const safeStart =
+      !task.isUnscheduled && !isNaN(startSource.getTime())
+        ? snapToDay(startSource)
+        : null;
+    const defaultStart = safeStart ? safeStart.toISOString().slice(0, 10) : "";
     const rawStart = window.prompt(
       "Startdatum (YYYY-MM-DD, leer = unbestimmt):",
       defaultStart
@@ -341,17 +351,24 @@ export class AppComponent implements OnInit, OnDestroy {
         alert("Ungültiges Startdatum.");
         return;
       }
-      const defaultEndDate = task.isUnscheduled
-        ? new Date(start.getTime() + 86400000)
-        : snapToDay(new Date(task.end));
+      const endSource = new Date(task.end);
+      const safeEnd =
+        !task.isUnscheduled && !isNaN(endSource.getTime())
+          ? snapToDay(endSource)
+          : new Date(start.getTime() + DAY_MS);
+      const defaultEndDate = safeEnd;
       const rawEnd = window.prompt(
         "Enddatum (YYYY-MM-DD):",
         defaultEndDate.toISOString().slice(0, 10)
       );
       if (!rawEnd) return;
       const end = snapToDay(new Date(rawEnd));
-      if (isNaN(end.getTime()) || end < start) {
-        alert("Ungültiges Enddatum.");
+      if (isNaN(end.getTime())) {
+        alert("Ungültiges Enddatum-Format.");
+        return;
+      }
+      if (end < start) {
+        alert("Enddatum darf nicht vor dem Startdatum liegen.");
         return;
       }
       task.start = start;
@@ -379,11 +396,11 @@ export class AppComponent implements OnInit, OnDestroy {
       case "feldtest":
         return 1;
       case "test":
-        return 1;
-      case "conversion":
         return 2;
-      case "repair":
+      case "conversion":
         return 3;
+      case "repair":
+        return 4;
       default:
         return 5;
     }
@@ -583,7 +600,7 @@ export class AppComponent implements OnInit, OnDestroy {
               return;
             }
             const dur = task.isUnscheduled
-              ? 86400000
+              ? DAY_MS
               : task.end.getTime() - task.start.getTime();
             task.start = newStart;
             task.end = new Date(newStart.getTime() + dur);
@@ -696,7 +713,7 @@ export class AppComponent implements OnInit, OnDestroy {
           if (parentId === null) return;
           const rawEnd = window.prompt(
             "Enddatum (YYYY-MM-DD):",
-            new Date(clickDate.getTime() + 4 * 86400000)
+            new Date(clickDate.getTime() + 4 * DAY_MS)
               .toISOString()
               .slice(0, 10)
           );
@@ -726,7 +743,7 @@ export class AppComponent implements OnInit, OnDestroy {
           if (parentId === null) return;
           const rawEnd = window.prompt(
             "Enddatum (YYYY-MM-DD):",
-            new Date(clickDate.getTime() + 7 * 86400000)
+            new Date(clickDate.getTime() + 7 * DAY_MS)
               .toISOString()
               .slice(0, 10)
           );
