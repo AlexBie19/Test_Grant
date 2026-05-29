@@ -1,0 +1,172 @@
+<div class="app-wrapper">
+  <!-- Header -->
+  <div class="app-header">
+    <h2>🚜 Traktor Aktionsplanung</h2>
+  </div>
+
+  <!-- Department filter -->
+  <div class="filter-bar">
+    <span class="filter-label">Abteilung:</span>
+    <button
+      *ngFor="let dept of departments"
+      class="filter-btn"
+      [class.active]="activeFilter === dept"
+      (click)="filterBy(dept)"
+    >
+      {{ dept }}
+    </button>
+  </div>
+
+  <!-- ── Action bar: appears only when calendar cells are selected ───────── -->
+  <div class="action-bar" *ngIf="rangeActive">
+    <div class="ab-left">
+      <span class="ab-icon">📅</span>
+      <span class="ab-range">{{ rangeLabel }}</span>
+      <span class="ab-task" *ngIf="lastRightClickedTaskTitle">
+        &nbsp;·&nbsp;Aktion: <strong>{{ lastRightClickedTaskTitle }}</strong>
+      </span>
+    </div>
+    <div class="ab-right">
+      <button class="ab-btn feldtest" (click)="createInRange('feldtest')">
+        🔬 Feldtest
+      </button>
+      <button class="ab-btn leihvertrag" (click)="createInRange('leihvertrag')">
+        📋 Leihvertrag
+      </button>
+      <button class="ab-btn conversion" (click)="createInRange('conversion')">
+        🔧 Conversion
+      </button>
+      <button class="ab-btn repair" (click)="createInRange('repair')">
+        🛠 Repair
+      </button>
+      <button
+        class="ab-btn move"
+        [class.disabled]="!lastRightClickedTaskId"
+        [disabled]="!lastRightClickedTaskId"
+        title="{{ lastRightClickedTaskId ? 'Ausgewählte Aktion hierher verschieben' : 'Erst eine Aktion per Rechtsklick auswählen' }}"
+        (click)="moveSelectedTaskToRange()"
+      >
+        ➡️ Hierher verschieben
+      </button>
+      <button class="ab-btn close" (click)="clearRange()">✕</button>
+    </div>
+  </div>
+
+  <!-- Legend -->
+  <div class="legend">
+    <span class="legend-dot asset-dot"></span><span>Asset (Traktor)</span>
+    <span class="legend-dot" style="background: #2ecc71"></span
+    ><span>Leihvertrag</span>
+    <span class="legend-dot" style="background: #27ae60"></span
+    ><span>Feldtest</span>
+    <span class="legend-dot" style="background: #e74c3c"></span
+    ><span>Conversion / Repair</span>
+    <span class="legend-dot unsched-dot"></span><span>Ungeplant</span>
+  </div>
+
+  <!-- Gantt -->
+  <dx-gantt
+    taskListWidth="560"
+    height="580"
+    scaleType="days"
+    [startDateRange]="startRange"
+    [endDateRange]="endRange"
+    (onContentReady)="onContentReady($event)"
+    (onContextMenuPreparing)="onContextMenuPreparing($event)"
+    (onTaskUpdating)="onTaskUpdating($event)"
+    (onTaskUpdated)="onTaskUpdated($event)"
+    (onTaskInserted)="onTaskInserted($event)"
+    (onTaskDeleted)="onTaskDeleted($event)"
+  >
+    <dxo-tasks
+      [dataSource]="filteredTasks"
+      keyExpr="id"
+      parentIdExpr="parentId"
+      titleExpr="title"
+      startExpr="start"
+      endExpr="end"
+      colorExpr="color"
+    >
+    </dxo-tasks>
+
+    <dxo-dependencies [dataSource]="dependencies"></dxo-dependencies>
+
+    <dxo-editing
+      [enabled]="true"
+      [allowTaskAdding]="true"
+      [allowTaskDeleting]="true"
+      [allowTaskUpdating]="true"
+      [allowDependencyAdding]="false"
+      [allowDependencyDeleting]="false"
+      [allowResourceAdding]="false"
+      [allowResourceDeleting]="false"
+      [allowResourceUpdating]="false"
+    >
+    </dxo-editing>
+
+    <dxo-toolbar>
+      <dxi-item name="undo"></dxi-item>
+      <dxi-item name="redo"></dxi-item>
+      <dxi-item name="separator"></dxi-item>
+      <dxi-item name="addTask"></dxi-item>
+      <dxi-item name="deleteTask"></dxi-item>
+      <dxi-item name="separator"></dxi-item>
+      <dxi-item name="zoomIn"></dxi-item>
+      <dxi-item name="zoomOut"></dxi-item>
+    </dxo-toolbar>
+
+    <dxi-column
+      dataField="title"
+      caption="Traktor / Aktion"
+      [width]="170"
+    ></dxi-column>
+    <dxi-column
+      dataField="start"
+      caption="Start"
+      dataType="date"
+      [width]="80"
+      [allowEditing]="false"
+    ></dxi-column>
+    <dxi-column
+      dataField="end"
+      caption="Ende"
+      dataType="date"
+      [width]="80"
+      [allowEditing]="false"
+    ></dxi-column>
+    <dxi-column
+      dataField="statusDisplay"
+      caption="Status"
+      [width]="85"
+      [allowEditing]="false"
+    ></dxi-column>
+    <dxi-column
+      dataField="operatingHours"
+      caption="Betriebsstd."
+      [width]="100"
+      [allowEditing]="false"
+    ></dxi-column>
+    <dxi-column
+      dataField="description"
+      caption="Beschreibung"
+      [width]="160"
+      [allowEditing]="true"
+    ></dxi-column>
+  </dx-gantt>
+
+  <!-- Hints -->
+  <div class="hints">
+    <span
+      >🖱 <strong>Kachel klicken</strong> = Datum markieren (1. Klick Von, 2.
+      Klick Bis) → Aktionsleiste erscheint</span
+    >
+    <span
+      >🖱 <strong>Rechtsklick Aktion</strong> = Unbestimmte Zeit · Zu Datum
+      verschieben · Leihvertrag verlängern</span
+    >
+    <span
+      >🖱 <strong>Rechtsklick Kalender</strong> = Von/Bis setzen · Neue Aktion /
+      Feldtest / Leihvertrag</span
+    >
+  </div>
+</div>

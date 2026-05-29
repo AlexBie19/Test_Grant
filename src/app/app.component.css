@@ -1,0 +1,197 @@
+/* ── Layout ─────────────────────────────────────────────────────────────── */
+.app-wrapper {
+  font-family: "Segoe UI", Tahoma, sans-serif;
+  padding: 14px 18px;
+  background: #f0f2f5;
+  min-height: 100vh;
+}
+.app-header h2 {
+  margin: 0 0 10px;
+  font-size: 20px;
+  color: #1a237e;
+}
+
+/* ── Filter bar ─────────────────────────────────────────────────────────── */
+.filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+.filter-label {
+  font-weight: 600;
+  color: #555;
+  font-size: 13px;
+}
+.filter-btn {
+  padding: 4px 13px;
+  border: 1px solid #bbb;
+  border-radius: 20px;
+  background: #fff;
+  cursor: pointer;
+  font-size: 13px;
+  transition: background 0.15s, color 0.15s;
+}
+.filter-btn:hover {
+  background: #e3e6ea;
+}
+.filter-btn.active {
+  background: #1565c0;
+  color: #fff;
+  border-color: #1565c0;
+}
+
+/* ── Action bar (cell selection result) ─────────────────────────────────── */
+.action-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  background: #fff8e1;
+  border: 1.5px solid #ffca28;
+  border-radius: 8px;
+  padding: 7px 12px;
+  margin-bottom: 8px;
+  font-size: 13px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+.ab-left {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+.ab-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.ab-icon {
+  font-size: 16px;
+}
+.ab-range {
+  font-weight: 700;
+  color: #e65100;
+}
+.ab-task {
+  color: #555;
+  font-size: 12px;
+}
+
+.ab-btn {
+  padding: 4px 11px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 12px;
+  color: #fff;
+  font-weight: 600;
+  transition: opacity 0.15s;
+}
+.ab-btn:hover {
+  opacity: 0.85;
+}
+.ab-btn:disabled,
+.ab-btn.disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.ab-btn.feldtest {
+  background: #27ae60;
+}
+.ab-btn.leihvertrag {
+  background: #2ecc71;
+  color: #1b5e20;
+}
+.ab-btn.conversion {
+  background: #e74c3c;
+}
+.ab-btn.repair {
+  background: #c0392b;
+}
+.ab-btn.move {
+  background: #1565c0;
+}
+.ab-btn.close {
+  background: #9e9e9e;
+}
+
+/* ── Legend ─────────────────────────────────────────────────────────────── */
+.legend {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+  font-size: 12px;
+  color: #444;
+}
+.legend-dot {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  margin-left: 10px;
+}
+.legend-dot:first-child {
+  margin-left: 0;
+}
+.legend-dot.asset-dot {
+  background: #ffe082;
+  border: 2px dashed #f9a825;
+}
+.legend-dot.unsched-dot {
+  background: #95a5a6;
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 3px,
+    rgba(0, 0, 0, 0.2) 3px,
+    rgba(0, 0, 0, 0.2) 6px
+  );
+}
+
+/* ── Hints ──────────────────────────────────────────────────────────────── */
+.hints {
+  margin-top: 8px;
+  font-size: 11px;
+  color: #666;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  padding: 7px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+/* ── Asset (Traktor) bar: dashed yellow, semi-transparent ───────────────── */
+.dx-gantt-task.asset-task {
+  background-color: #ffe082 !important;
+  border: 2px dashed #f9a825 !important;
+  opacity: 0.5 !important;
+  background-image: none !important;
+}
+
+/* ── Unscheduled bar: striped grey ──────────────────────────────────────── */
+.dx-gantt-task.unscheduled-task {
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 5px,
+    rgba(0, 0, 0, 0.18) 5px,
+    rgba(0, 0, 0, 0.18) 10px
+  ) !important;
+  opacity: 0.75 !important;
+}
+
+/* ── Cursor hint: pointer over chart area ───────────────────────────────── */
+.dx-gantt-view {
+  cursor: cell;
+}
+.dx-gantt-task {
+  cursor: pointer;
+}
