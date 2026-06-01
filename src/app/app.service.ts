@@ -5,6 +5,7 @@ export const FAR_FUTURE = new Date(2099, 0, 1);
 export const ACTION_COLORS: { [key: string]: string } = {
   leihvertrag: "#2ecc71",
   feldtest: "#27ae60",
+  test: "#00acc1",
   conversion: "#e74c3c",
   repair: "#e74c3c",
   unscheduled: "#95a5a6",
@@ -16,6 +17,7 @@ export const ACTION_TYPE_OPTIONS = [
   { value: "repair", label: "2 - Repair" },
   { value: "feldtest", label: "3 - Feldtest" },
   { value: "leihvertrag", label: "4 - Leihvertrag" },
+  { value: "test", label: "5 - Test" },
 ];
 
 const _today = new Date();
